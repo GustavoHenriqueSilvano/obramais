@@ -4,11 +4,10 @@ class EntidadeCadastro extends StatefulWidget {
   const EntidadeCadastro({super.key});
 
   @override
-  _EntidadeCadastroState createState() => _EntidadeCadastroState();
+  EntidadeCadastroState createState() => EntidadeCadastroState();
 }
 
-class _EntidadeCadastroState extends State<EntidadeCadastro> {
-  // Simulando dados que viriam do banco
+class EntidadeCadastroState extends State<EntidadeCadastro> {
   List<String> allItems = [
     'Prestador A',
     'Prestador B',
@@ -23,7 +22,7 @@ class _EntidadeCadastroState extends State<EntidadeCadastro> {
   @override
   void initState() {
     super.initState();
-    filteredItems = allItems; // inicializa com todos
+    filteredItems = allItems;
   }
 
   void updateSearch(String query) {
@@ -41,7 +40,6 @@ class _EntidadeCadastroState extends State<EntidadeCadastro> {
       appBar: AppBar(title: const Text('Prestadores de Serviço')),
       body: Column(
         children: [
-          // Campo de pesquisa
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: TextField(
@@ -53,8 +51,6 @@ class _EntidadeCadastroState extends State<EntidadeCadastro> {
               onChanged: updateSearch,
             ),
           ),
-
-          // Lista filtrada
           Expanded(
             child: ListView.builder(
               itemCount: filteredItems.length,
@@ -63,7 +59,6 @@ class _EntidadeCadastroState extends State<EntidadeCadastro> {
                 return ListTile(
                   title: Text(item),
                   onTap: () {
-                    // Aqui pode abrir detalhes ou editar o prestador
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(content: Text('Selecionou: $item')),
                     );
