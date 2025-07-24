@@ -26,13 +26,23 @@ class HomePageState extends State<HomePage> {
         onServicesTap: () => debugPrint('Serviços clicado'),
         onConversationsTap: () => debugPrint('Conversas clicado'),
         onAppointmentsTap: () => debugPrint('Agendamentos clicado'),
-        onAccountTap: () => debugPrint('Conta clicado'),
+        onAccountTap: () => _onItemTapped(
+          4,
+        ), // CORREÇÃO AQUI: Altera o _selectedIndex para o índice da EntidadeCadastro
       ),
     );
-    _pages.add(const Center(child: Text("Buscar")));
-    _pages.add(const Center(child: Text("Notificações")));
-    _pages.add(const Center(child: Text("Chat")));
-    _pages.add(const EntidadeCadastro());
+    _pages.add(
+      const Center(child: Text("Serviços")),
+    ); // Corrigido o label para 'Serviços' conforme o bottom nav bar
+    _pages.add(
+      const Center(child: Text("Conversas")),
+    ); // Corrigido o label para 'Conversas' conforme o bottom nav bar
+    _pages.add(
+      const Center(child: Text("Agendamentos")),
+    ); // Corrigido o label para 'Agendamentos' conforme o bottom nav bar
+    _pages.add(
+      const EntidadeCadastro(),
+    ); // Já é o índice 4, que corresponde a "Conta" no bottom nav bar
   }
 
   void _onItemTapped(int index) {
