@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-// import 'package:obramais/models/menu_block_data.dart';
 
 class HomeContent extends StatelessWidget {
   final VoidCallback onServiceRequestTap;
