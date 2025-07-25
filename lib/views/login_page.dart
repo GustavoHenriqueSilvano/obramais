@@ -1,72 +1,134 @@
 import 'package:flutter/material.dart';
-import 'package:obramais/views/home_content.dart';
-import 'package:obramais/views/entidade_page.dart';
-import 'package:obramais/widgets/notifications_badge.dart';
-import 'package:obramais/views/login_page.dart';
+import 'package:obramais/controllers/login_auth.dart';
+import 'package:obramais/views/home_page.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
 
   @override
-  HomePageState createState() => HomePageState();
+  State<LoginPage> createState() => _LoginPageState();
 }
 
-class HomePageState extends State<HomePage> {
-  int _selectedIndex = 0;
-  int _notificationCount = 3;
-  final List<Widget> _pages = <Widget>[];
+class _LoginPageState extends State<LoginPage> {
+  final _formKey = GlobalKey<FormState>();
+  final _userController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _passwordFocusNode = FocusNode();
+
+  bool _isLoading = false;
 
   @override
-  void initState() {
-    super.initState();
-    _pages.add(
-      HomeContent(
-        onServiceRequestTap: () => debugPrint('Solicitar Serviço + clicado'),
-        onDashboardTap: () => debugPrint('Dashboard clicado'),
-        onServicesTap: () => debugPrint('Serviços clicado'),
-        onConversationsTap: () => debugPrint('Conversas clicado'),
-        onAppointmentsTap: () => debugPrint('Agendamentos clicado'),
-        onAccountTap: () => _onItemTapped(4),
-        onLogoutTap: _logout,
-      ),
-    );
-    _pages.add(const Center(child: Text("Serviços")));
-    _pages.add(const Center(child: Text("Conversas")));
-    _pages.add(const Center(child: Text("Agendamentos")));
-    _pages.add(const EntidadeCadastro());
+  void dispose() {
+    _userController.dispose();
+    _passwordController.dispose();
+    _passwordFocusNode.dispose();
+    super.dispose();
   }
 
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
+  Future<void> _login() async {
+    if (_formKey.currentState?.validate() ?? false) {
+      setState(() => _isLoading = true);
+      await Future.delayed(const Duration(seconds: 1));
 
-  void _onNotificationPressed() {
-    setState(() {
-      _notificationCount = 0;
-      debugPrint('Notificações zeradas');
-    });
-  }
+      final user = _userController.text.trim();
+      final password = _passwordController.text;
 
-  void _logout() {
-    Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(builder: (context) => const LoginPage()),
-      (Route<dynamic> route) => false,
-    );
+      final isValid = LoginAuth.validate(user, password);
+
+      if (!mounted) return;
+
+      if (isValid) {
+        Navigator.of(
+          context,
+        ).pushReplacement(MaterialPageRoute(builder: (_) => const HomePage()));
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Usuário ou senha inválidos.'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+
+      setState(() => _isLoading = false);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Obra+'),
-        actions: [
-          Stack(
-            children: [
-              IconButton(
-                icon: const Icon(Icons.notifications),
-                onPressed: _onNotificationPressed,
-              ),
-             
+      appBar: AppBar(title: const Text('Login - Obra+'), centerTitle: true),
+      body: Center(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(24),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Icon(
+                  Icons.construction,
+                  size: 80,
+                  color: Theme.of(context).primaryColor,
+                ),
+                const SizedBox(height: 40),
+                TextFormField(
+                  controller: _userController,
+                  textInputAction: TextInputAction.next,
+                  onFieldSubmitted: (_) {
+                    FocusScope.of(context).requestFocus(_passwordFocusNode);
+                  },
+                  decoration: const InputDecoration(
+                    labelText: 'Usuário',
+                    border: OutlineInputBorder(),
+                    prefixIcon: Icon(Icons.person),
+                  ),
+                  validator: (value) => value == null || value.trim().isEmpty
+                      ? 'Informe o usuário'
+                      : null,
+                ),
+                const SizedBox(height: 20),
+                TextFormField(
+                  controller: _passwordController,
+                  focusNode: _passwordFocusNode,
+                  obscureText: true,
+                  textInputAction: TextInputAction.done,
+                  onFieldSubmitted: (_) => _login(),
+                  decoration: const InputDecoration(
+                    labelText: 'Senha',
+                    border: OutlineInputBorder(),
+                    prefixIcon: Icon(Icons.lock),
+                  ),
+                  validator: (value) =>
+                      value == null || value.isEmpty ? 'Informe a senha' : null,
+                ),
+                const SizedBox(height: 30),
+                ElevatedButton(
+                  onPressed: _isLoading ? null : _login,
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                  ),
+                  child: _isLoading
+                      ? const SizedBox(
+                          width: 24,
+                          height: 24,
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                            strokeWidth: 3,
+                          ),
+                        )
+                      : const Text('Entrar'),
+                ),
+                const SizedBox(height: 20),
+                TextButton(
+                  onPressed: null, // Placeholder para ação de cadastro futura
+                  child: const Text('Cadastrar-se'),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}

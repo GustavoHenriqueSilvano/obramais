@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:obramais/services/ranking_star.dart'; // Importe o widget de estrelas
+import 'package:obramais/services/ranking_star.dart'; // Importa o widget das estrelas
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -9,7 +9,6 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  // Dados simulados do perfil. Em um aplicativo real, estes virão de uma Controller futuramente.
   String _nome = "Nome do Prestador/Empresa";
   String _cpfCnpj = "123.456.789-00";
   String _rua = "Rua Exemplo, 123";
@@ -19,7 +18,6 @@ class _ProfilePageState extends State<ProfilePage> {
   String _pais = "País da Fantasia";
   final String _tipoTrabalhoExibicao = "Contrato por Hora";
 
-  // Ranqueamento simulado. virá futuramente da controller RankingController.
   final double _currentRating = 3.5;
 
   final List<String> _tiposServicoPrestado = [
@@ -35,7 +33,6 @@ class _ProfilePageState extends State<ProfilePage> {
     'NR-35: Trabalho em Altura',
   ];
 
-  // Controladores para os campos de texto editáveis.
   late TextEditingController _nomeController;
   late TextEditingController _cpfCnpjController;
   late TextEditingController _ruaController;
@@ -44,13 +41,11 @@ class _ProfilePageState extends State<ProfilePage> {
   late TextEditingController _estadoController;
   late TextEditingController _paisController;
 
-  // Controla o modo de edição da tela.
   bool _isEditing = false;
 
   @override
   void initState() {
     super.initState();
-    // Inicializa os controladores de texto com os dados simulados.
     _nomeController = TextEditingController(text: _nome);
     _cpfCnpjController = TextEditingController(text: _cpfCnpj);
     _ruaController = TextEditingController(text: _rua);
@@ -62,7 +57,6 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   void dispose() {
-    // Descarta os controladores para liberar recursos.
     _nomeController.dispose();
     _cpfCnpjController.dispose();
     _ruaController.dispose();
@@ -73,12 +67,10 @@ class _ProfilePageState extends State<ProfilePage> {
     super.dispose();
   }
 
-  // Alterna entre o modo de visualização e edição.
   void _toggleEditMode() {
     setState(() {
       _isEditing = !_isEditing;
       if (!_isEditing) {
-        // Quando sai do modo de edição (salvar), atualiza os dados simulados.
         _nome = _nomeController.text;
         _cpfCnpj = _cpfCnpjController.text;
         _rua = _ruaController.text;
@@ -87,11 +79,8 @@ class _ProfilePageState extends State<ProfilePage> {
         _estado = _estadoController.text;
         _pais = _paisController.text;
 
-        print('Dados do perfil salvos (simulado):');
-        print('Nome: $_nome');
-        print('CPF/CNPJ: $_cpfCnpj');
+        print('Perfil atualizado: $_nome, $_cpfCnpj, $_rua');
       } else {
-        // Quando entra no modo de edição, garante que os controladores refletem os dados atuais.
         _nomeController.text = _nome;
         _cpfCnpjController.text = _cpfCnpj;
       }
@@ -103,19 +92,12 @@ class _ProfilePageState extends State<ProfilePage> {
     return Scaffold(
       appBar: AppBar(title: const Text('Meu Perfil'), centerTitle: true),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            // Foto de Perfil
             GestureDetector(
-              onTap: _isEditing
-                  ? () {
-                      print(
-                        'Atualizar foto de perfil (apenas em modo de edição)',
-                      );
-                    }
-                  : null,
+              onTap: _isEditing ? () => print('Alterar foto de perfil') : null,
               child: const CircleAvatar(
                 radius: 60,
                 backgroundColor: Colors.grey,
@@ -124,7 +106,6 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             const SizedBox(height: 10),
 
-            // Nome do Prestador/Empresa
             _isEditing
                 ? TextFormField(
                     controller: _nomeController,
@@ -141,81 +122,20 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                     textAlign: TextAlign.center,
                   ),
-            const SizedBox(height: 10),
 
-            // Ranqueamento em Estrelas
+            const SizedBox(height: 10),
             RankingStarsView(rating: _currentRating),
             const SizedBox(height: 20),
 
-            // Campo CPF/CNPJ
-            TextFormField(
-              controller: _cpfCnpjController,
-              decoration: const InputDecoration(
-                labelText: 'CPF/CNPJ',
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.credit_card),
-              ),
-              readOnly: !_isEditing,
-            ),
-            const SizedBox(height: 15),
+            _buildTextField(_cpfCnpjController, 'CPF/CNPJ', Icons.credit_card),
+            _buildTextField(_ruaController, 'Rua', Icons.location_on),
+            _buildTextField(_bairroController, 'Bairro', Icons.location_city),
+            _buildTextField(_cidadeController, 'Cidade', Icons.place),
+            _buildTextField(_estadoController, 'Estado', Icons.map),
+            _buildTextField(_paisController, 'País', Icons.public),
 
-            // Campos de Endereço
-            TextFormField(
-              controller: _ruaController,
-              decoration: const InputDecoration(
-                labelText: 'Rua',
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.location_on),
-              ),
-              readOnly: !_isEditing,
-            ),
-            const SizedBox(height: 15),
-
-            TextFormField(
-              controller: _bairroController,
-              decoration: const InputDecoration(
-                labelText: 'Bairro',
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.location_city),
-              ),
-              readOnly: !_isEditing,
-            ),
-            const SizedBox(height: 15),
-
-            TextFormField(
-              controller: _cidadeController,
-              decoration: const InputDecoration(
-                labelText: 'Cidade',
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.place),
-              ),
-              readOnly: !_isEditing,
-            ),
-            const SizedBox(height: 15),
-
-            TextFormField(
-              controller: _estadoController,
-              decoration: const InputDecoration(
-                labelText: 'Estado',
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.map),
-              ),
-              readOnly: !_isEditing,
-            ),
-            const SizedBox(height: 15),
-
-            TextFormField(
-              controller: _paisController,
-              decoration: const InputDecoration(
-                labelText: 'País',
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.public),
-              ),
-              readOnly: !_isEditing,
-            ),
             const SizedBox(height: 20),
 
-            // Tipo de Trabalho (somente leitura)
             TextFormField(
               initialValue: _tipoTrabalhoExibicao,
               decoration: const InputDecoration(
@@ -225,81 +145,98 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
               readOnly: true,
             ),
-            const SizedBox(height: 20),
 
-            // Tipo de Serviço Prestado
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                'Tipo de Serviço Prestado:',
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-            ),
-            const SizedBox(height: 10),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: _tiposServicoPrestado
-                  .map(
-                    (servico) => Padding(
-                      padding: const EdgeInsets.only(bottom: 4.0),
-                      child: Text('- $servico'),
-                    ),
-                  )
-                  .toList(),
-            ),
-            const SizedBox(height: 10),
-            if (_isEditing)
-              ElevatedButton(
-                onPressed: () {
-                  print('Gerenciar Tipos de Serviço Prestado');
-                },
-                style: ElevatedButton.styleFrom(
-                  minimumSize: const Size(double.infinity, 50),
-                ),
-                child: const Text('Gerenciar Serviços Prestados'),
-              ),
             const SizedBox(height: 20),
+            _buildListSection(
+              context,
+              title: 'Tipo de Serviço Prestado:',
+              items: _tiposServicoPrestado,
+              showButton: _isEditing,
+              buttonText: 'Gerenciar Serviços Prestados',
+              onButtonPressed: () => print('Gerenciar Serviços Prestados'),
+            ),
 
-            // Normas Reguladoras (NRs)
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                'Normas Reguladoras (NRs):',
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-            ),
-            const SizedBox(height: 10),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: _normasReguladoras
-                  .map(
-                    (nr) => Padding(
-                      padding: const EdgeInsets.only(bottom: 4.0),
-                      child: Text('- $nr'),
-                    ),
-                  )
-                  .toList(),
-            ),
-            const SizedBox(height: 10),
-            if (_isEditing)
-              ElevatedButton(
-                onPressed: () {
-                  print('Gerenciar Normas Reguladoras');
-                },
-                style: ElevatedButton.styleFrom(
-                  minimumSize: const Size(double.infinity, 50),
-                ),
-                child: const Text('Gerenciar NRs'),
-              ),
             const SizedBox(height: 20),
+            _buildListSection(
+              context,
+              title: 'Normas Reguladoras (NRs):',
+              items: _normasReguladoras,
+              showButton: _isEditing,
+              buttonText: 'Gerenciar NRs',
+              onButtonPressed: () => print('Gerenciar NRs'),
+            ),
           ],
         ),
       ),
-      // Floating Action Button para Editar/Salvar
       floatingActionButton: FloatingActionButton(
         onPressed: _toggleEditMode,
+        backgroundColor: Colors.green,
+        foregroundColor: Colors.white,
         child: Icon(_isEditing ? Icons.save : Icons.edit),
       ),
+    );
+  }
+
+  Widget _buildTextField(
+    TextEditingController controller,
+    String label,
+    IconData icon,
+  ) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 15),
+      child: TextFormField(
+        controller: controller,
+        decoration: InputDecoration(
+          labelText: label,
+          border: const OutlineInputBorder(),
+          prefixIcon: Icon(icon),
+        ),
+        readOnly: !_isEditing,
+      ),
+    );
+  }
+
+  Widget _buildListSection(
+    BuildContext context, {
+    required String title,
+    required List<String> items,
+    required bool showButton,
+    required String buttonText,
+    required VoidCallback onButtonPressed,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Text(title, style: Theme.of(context).textTheme.titleMedium),
+        ),
+        const SizedBox(height: 10),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: items
+              .map(
+                (item) => Padding(
+                  padding: const EdgeInsets.only(bottom: 4.0),
+                  child: Text('- $item'),
+                ),
+              )
+              .toList(),
+        ),
+        if (showButton)
+          Padding(
+            padding: const EdgeInsets.only(top: 10),
+            child: ElevatedButton(
+              onPressed: onButtonPressed,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.lightGreen,
+                foregroundColor: Colors.white,
+                minimumSize: const Size(double.infinity, 50),
+              ),
+              child: Text(buttonText),
+            ),
+          ),
+      ],
     );
   }
 }

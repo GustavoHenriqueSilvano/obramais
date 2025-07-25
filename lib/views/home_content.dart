@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:obramais/models/menu_block_data.dart';
+// import 'package:obramais/models/menu_block_data.dart';
 
 class HomeContent extends StatelessWidget {
   final VoidCallback onServiceRequestTap;
@@ -8,7 +8,7 @@ class HomeContent extends StatelessWidget {
   final VoidCallback onConversationsTap;
   final VoidCallback onAppointmentsTap;
   final VoidCallback onAccountTap;
-  final VoidCallback onLogoutTap;
+  final VoidCallback onLogoutTap; // Adicionado para o item "Sair"
 
   const HomeContent({
     super.key,
@@ -18,99 +18,74 @@ class HomeContent extends StatelessWidget {
     required this.onConversationsTap,
     required this.onAppointmentsTap,
     required this.onAccountTap,
-    required this.onLogoutTap,
+    required this.onLogoutTap, // Adicionado
   });
 
   @override
   Widget build(BuildContext context) {
-    final List<MenuBlockData> menuBlocks = [
-      MenuBlockData(
-        icon: Icons.add_box,
-        title: 'Solicitar Serviço +',
-        onTap: onServiceRequestTap,
-        color: Colors.green.shade300,
-      ),
-      MenuBlockData(
-        icon: Icons.home,
-        title: 'Dashboard',
-        onTap: onDashboardTap,
-      ),
-      MenuBlockData(icon: Icons.build, title: 'Serviços', onTap: onServicesTap),
-      MenuBlockData(
-        icon: Icons.chat,
-        title: 'Conversas',
-        onTap: onConversationsTap,
-      ),
-      MenuBlockData(
-        icon: Icons.calendar_today,
-        title: 'Agendamentos',
-        onTap: onAppointmentsTap,
-      ),
-      MenuBlockData(icon: Icons.person, title: 'Conta', onTap: onAccountTap),
+    final menuItems = [
+      _MenuItem(Icons.add_box, 'Solicitar Serviço +', onServiceRequestTap),
+      _MenuItem(Icons.dashboard, 'Dashboard', onDashboardTap),
+      _MenuItem(Icons.build, 'Serviços', onServicesTap),
+      _MenuItem(Icons.chat, 'Conversas', onConversationsTap),
+      _MenuItem(Icons.calendar_today, 'Agendamentos', onAppointmentsTap),
+      _MenuItem(Icons.person, 'Conta', onAccountTap),
+      _MenuItem(Icons.exit_to_app, 'Sair', onLogoutTap), // Item "Sair"
     ];
 
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(16),
       child: Center(
-        child: Column(
-          children: [
-            Wrap(
-              spacing: 16,
-              runSpacing: 16,
-              alignment: WrapAlignment.center,
-              children: menuBlocks.map((block) {
-                return InkWell(
-                  onTap: block.onTap,
+        child: Wrap(
+          spacing: 16,
+          runSpacing: 16,
+          children: menuItems.map((item) {
+            return InkWell(
+              onTap: item.onTap,
+              borderRadius: BorderRadius.circular(12),
+              child: Container(
+                width: 140,
+                height: 120,
+                decoration: BoxDecoration(
+                  color: Colors.green.shade100,
                   borderRadius: BorderRadius.circular(12),
-                  child: Container(
-                    width: 140,
-                    height: 120,
-                    decoration: BoxDecoration(
-                      color: block.color ?? Colors.green.shade100,
-                      borderRadius: BorderRadius.circular(12),
-                      boxShadow: const [
-                        BoxShadow(
-                          color: Colors.black12,
-                          blurRadius: 4,
-                          offset: Offset(2, 2),
-                        ),
-                      ],
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Colors.black12,
+                      blurRadius: 4,
+                      offset: Offset(2, 2),
                     ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          block.icon,
-                          size: 40,
-                          color: Colors.green.shade700,
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          block.title,
-                          style: const TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
+                  ],
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(item.icon, size: 40, color: Colors.green.shade700),
+                    const SizedBox(height: 8),
+                    Text(
+                      item.label,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.center,
                     ),
-                  ),
-                );
-              }).toList(),
-            ),
-            const SizedBox(height: 24),
-            ElevatedButton.icon(
-              onPressed: onLogoutTap,
-              icon: const Icon(Icons.logout),
-              label: const Text('Sair'),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.redAccent,
+                  ],
+                ),
               ),
-            ),
-          ],
+            );
+          }).toList(),
         ),
       ),
     );
   }
+}
+
+// Model para os blocos de menu (simplificado para DartPad)
+class _MenuItem {
+  final IconData icon;
+  final String label;
+  final VoidCallback onTap;
+
+  _MenuItem(this.icon, this.label, this.onTap);
 }
