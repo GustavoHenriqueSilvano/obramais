@@ -8,6 +8,7 @@ class HomeContent extends StatelessWidget {
   final VoidCallback onConversationsTap;
   final VoidCallback onAppointmentsTap;
   final VoidCallback onAccountTap;
+  final VoidCallback onLogoutTap;
 
   const HomeContent({
     super.key,
@@ -17,6 +18,7 @@ class HomeContent extends StatelessWidget {
     required this.onConversationsTap,
     required this.onAppointmentsTap,
     required this.onAccountTap,
+    required this.onLogoutTap,
   });
 
   @override
@@ -50,46 +52,63 @@ class HomeContent extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Center(
-        child: Wrap(
-          spacing: 16,
-          runSpacing: 16,
-          alignment: WrapAlignment.center,
-          children: menuBlocks.map((block) {
-            return InkWell(
-              onTap: block.onTap,
-              borderRadius: BorderRadius.circular(12),
-              child: Container(
-                width: 140,
-                height: 120,
-                decoration: BoxDecoration(
-                  color: block.color ?? Colors.green.shade100,
+        child: Column(
+          children: [
+            Wrap(
+              spacing: 16,
+              runSpacing: 16,
+              alignment: WrapAlignment.center,
+              children: menuBlocks.map((block) {
+                return InkWell(
+                  onTap: block.onTap,
                   borderRadius: BorderRadius.circular(12),
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Colors.black12,
-                      blurRadius: 4,
-                      offset: Offset(2, 2),
+                  child: Container(
+                    width: 140,
+                    height: 120,
+                    decoration: BoxDecoration(
+                      color: block.color ?? Colors.green.shade100,
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Colors.black12,
+                          blurRadius: 4,
+                          offset: Offset(2, 2),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(block.icon, size: 40, color: Colors.green.shade700),
-                    const SizedBox(height: 8),
-                    Text(
-                      block.title,
-                      style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      textAlign: TextAlign.center,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          block.icon,
+                          size: 40,
+                          color: Colors.green.shade700,
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          block.title,
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                );
+              }).toList(),
+            ),
+            const SizedBox(height: 24),
+            ElevatedButton.icon(
+              onPressed: onLogoutTap,
+              icon: const Icon(Icons.logout),
+              label: const Text('Sair'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.redAccent,
               ),
-            );
-          }).toList(),
+            ),
+          ],
         ),
       ),
     );
