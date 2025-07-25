@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:obramais/views/home_content.dart';
-import 'package:obramais/views/entidade_page.dart';
 import 'package:obramais/views/login_page.dart';
+import 'package:obramais/views/profile_page.dart';
 // import 'package:obramais/widgets/notifications_badge.dart';
 
 class HomePage extends StatefulWidget {
@@ -33,7 +33,7 @@ class HomePageState extends State<HomePage> {
       const Center(child: Text("Serviços")),
       const Center(child: Text("Conversas")),
       const Center(child: Text("Agendamentos")),
-      const EntidadeCadastro(), // Página de cadastro de entidade
+      const ProfilePage(), // Página de cadastro de entidade
     ];
   }
 

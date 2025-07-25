@@ -13,7 +13,7 @@ class ObraMaisApp extends StatelessWidget {
     return MaterialApp(
       title: 'Obra+ App',
       theme: ThemeData(primarySwatch: Colors.green),
-      debugShowCheckedModeBanner: false,
+      debugShowCheckedModeBanner: true,
       home: const LoginPage(),
     );
   }
